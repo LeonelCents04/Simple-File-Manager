@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<title>Files</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/app.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<div class="titlebar" aria-hidden="true"></div>
+<div class="blobs" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+
+<div class="app glass" id="app">
+  <nav class="side" aria-label="Folders">
+    <div class="brand"><span class="mark"></span>Files</div>
+    <div id="tree"></div>
+    <p class="side-foot">Press N for a new file. Right-click a file for more. Nothing is ever replaced without asking.</p>
+  </nav>
+
+  <section class="main" aria-label="Current folder">
+    <nav class="menubar" id="menubar" role="menubar" aria-label="Main menu"></nav>
+    <header class="top">
+      <button class="ib" data-act="up" id="upbtn" aria-label="Up one folder" title="Up one folder (Backspace)"></button>
+      <div class="crumbs" id="crumbs" aria-label="Location"></div>
+      <span class="grow"></span>
+      <button class="ib" data-act="refresh" id="refreshbtn" aria-label="Refresh" title="Refresh (F5)"></button>
+      <button class="pill" data-act="dev" id="devbtn" aria-expanded="false" aria-controls="dev"><span class="pl">Spec checklist</span><b id="devcnt">0/10</b></button>
+      <button class="ib" data-act="theme" id="themebtn" aria-label="Switch light or dark theme" title="Switch theme"></button>
+    </header>
+    <div class="tools" id="tools" role="toolbar" aria-label="File operations"></div>
+    <div class="lh" aria-hidden="true"><span>Name</span><span>Size</span><span class="mdh">Modified</span></div>
+    <div class="rows" id="rows" role="listbox" aria-label="Files and folders" tabindex="0"></div>
+    <footer class="bar" id="bar"></footer>
+  </section>
+
+  <aside class="details" id="details" aria-label="Details"></aside>
+</div>
+
+<aside class="dev glass" id="dev" aria-label="Spec checklist and file_ops log">
+  <header><h4>Spec checklist</h4><button class="ib" data-act="dev-close" aria-label="Close panel" id="devx"></button></header>
+  <div class="meter"><i id="meterfill"></i></div>
+  <ul class="cov" id="cov"></ul>
+  <h5>What the interface asks file_ops to do</h5>
+  <ul id="log"></ul>
+  <h5>Try a failure</h5>
+  <p>Delete the selected file in File Explorer, then open, append to or delete it here. The app reports it and never re-creates it.</p>
+</aside>
+
+<div id="layer"></div>
+<div id="toasts" aria-live="polite"></div>
+</body>
+</html>

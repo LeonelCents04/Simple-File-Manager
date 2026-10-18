@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Files Glass Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --font:"Manrope",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+  /* light */
+  --bg1:#eaf0ff; --bg2:#fdeee3;
+  --blob1:#8ea6ff; --blob2:#79e0d0; --blob3:#ffc49a;
+  --glass:rgba(255,255,255,.50); --glass-2:rgba(255,255,255,.30); --glass-solid:#f3f5fb;
+  --sheet:rgba(255,255,255,.78);
+  --border:rgba(255,255,255,.80); --line:rgba(28,38,92,.10); --hi:rgba(255,255,255,.95);
+  --text:#161b36; --muted:rgba(22,27,54,.66); --faint:rgba(22,27,54,.44);
+  --accent:#4357d8; --accent-ink:#ffffff; --accent-soft:rgba(67,87,216,.13);
+  --ok:#0f7a45; --err:#c3303f; --warn:#8f6200; --danger:#d03a49;
+  --field:rgba(255,255,255,.66); --hover:rgba(28,38,92,.055);
+  --shadow:0 30px 70px rgba(54,66,140,.22);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg1:#080c1c; --bg2:#1a1240;
+    --blob1:#4a66ff; --blob2:#14c9a8; --blob3:#e8795a;
+    --glass:rgba(255,255,255,.075); --glass-2:rgba(255,255,255,.045); --glass-solid:#151a2e;
+    --sheet:rgba(26,30,56,.70);
+    --border:rgba(255,255,255,.16); --line:rgba(255,255,255,.09); --hi:rgba(255,255,255,.26);
+    --text:#eef0fa; --muted:rgba(238,240,250,.68); --faint:rgba(238,240,250,.42);
+    --accent:#9bacff; --accent-ink:#080c1c; --accent-soft:rgba(155,172,255,.18);
+    --ok:#6be8a8; --err:#ff8793; --warn:#ffd079; --danger:#ff6b7a;
+    --field:rgba(0,0,0,.26); --hover:rgba(255,255,255,.06);
+    --shadow:0 30px 70px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg1:#080c1c; --bg2:#1a1240;
+  --blob1:#4a66ff; --blob2:#14c9a8; --blob3:#e8795a;
+  --glass:rgba(255,255,255,.075); --glass-2:rgba(255,255,255,.045); --glass-solid:#151a2e;
+  --sheet:rgba(26,30,56,.70);
+  --border:rgba(255,255,255,.16); --line:rgba(255,255,255,.09); --hi:rgba(255,255,255,.26);
+  --text:#eef0fa; --muted:rgba(238,240,250,.68); --faint:rgba(238,240,250,.42);
+  --accent:#9bacff; --accent-ink:#080c1c; --accent-soft:rgba(155,172,255,.18);
+  --ok:#6be8a8; --err:#ff8793; --warn:#ffd079; --danger:#ff6b7a;
+  --field:rgba(0,0,0,.26); --hover:rgba(255,255,255,.06);
+  --shadow:0 30px 70px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; font:14px/1.5 var(--font); color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2)) fixed;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{flex:none}
+
+/* drifting colour behind the glass; this is what the blur has to work with */
+.blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.62}
+.b1{width:540px;height:540px;background:var(--blob1);top:-160px;left:-120px;animation:d1 32s ease-in-out infinite alternate}
+.b2{width:480px;height:480px;background:var(--blob2);right:-140px;top:22%;animation:d2 38s ease-in-out infinite alternate}
+.b3{width:520px;height:520px;background:var(--blob3);bottom:-220px;left:34%;opacity:.45;animation:d3 44s ease-in-out infinite alternate}
+@keyframes d1{to{transform:translate(120px,90px)}}
+@keyframes d2{to{transform:translate(-110px,-70px)}}
+@keyframes d3{to{transform:translate(-140px,-60px)}}
+
+.glass{
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(26px) saturate(165%); backdrop-filter:blur(26px) saturate(165%);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow),inset 0 1px 0 var(--hi);
+}
+
+/* ---------- app window ---------- */
+.app{
+  position:relative;z-index:1;margin:24px auto;width:min(1240px,calc(100% - 32px));
+  height:min(780px,calc(100vh - 48px));min-height:580px;border-radius:26px;overflow:hidden;
+  display:grid;grid-template-columns:216px minmax(0,1fr) 296px;
+}
+.side{display:flex;flex-direction:column;gap:14px;padding:18px 12px 14px;background:var(--glass-2);border-right:1px solid var(--line);min-height:0}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 6px;font-weight:700;font-size:15px;letter-spacing:-.01em}
+.mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(140deg,var(--accent),var(--blob2));box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+#tree{display:grid;gap:2px;overflow:auto;min-height:0}
+.node{display:flex;align-items:center;gap:9px;width:100%;padding:7px 10px;border:0;border-radius:10px;background:none;color:var(--muted);text-align:left;font-size:13.5px}
+.node span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node:hover{background:var(--hover);color:var(--text)}
+.node.cur{background:var(--accent-soft);color:var(--text);font-weight:600}
+.side-foot{margin-top:auto;padding:0 10px;font-size:12px;color:var(--faint);line-height:1.45}
+
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.menubar{display:flex;gap:2px;padding:12px 14px 0 14px}
+.mbtn{border:0;background:none;color:var(--muted);padding:5px 12px;border-radius:8px;font-size:13.5px;font-weight:500}
+.mbtn:hover,.mbtn[aria-expanded="true"]{background:var(--hover);color:var(--text)}
+.ci:disabled{opacity:.4;cursor:not-allowed}
+.ci:disabled:hover{background:none}
+.top{display:flex;align-items:center;gap:8px;padding:6px 16px 6px 18px}
+.crumbs{display:flex;align-items:center;flex-wrap:wrap;min-width:0;gap:0}
+.crumb{border:0;background:none;color:var(--muted);padding:5px 8px;border-radius:8px;font-size:14px}
+.crumb:hover{background:var(--hover);color:var(--text)}
+.crumb.last{color:var(--text);font-weight:600;cursor:default}
+.crumb.last:hover{background:none}
+.sep{color:var(--faint);display:grid;place-items:center}
+.grow{flex:1}
+.ib{width:34px;height:34px;border-radius:10px;border:1px solid transparent;background:none;color:var(--muted);display:grid;place-items:center}
+.ib:hover{background:var(--hover);color:var(--text)}
+.ib:disabled{opacity:.35;cursor:not-allowed}
+.pill{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass-2);color:var(--muted);font-size:13px;font-weight:500}
+.pill:hover{color:var(--text);background:var(--hover)}
+.pill b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.wc{display:flex;gap:2px;margin-left:6px;color:var(--faint)}
+.wc i{width:30px;height:30px;display:grid;place-items:center;border-radius:8px}
+
+.tools{display:flex;flex-wrap:wrap;gap:8px;padding:8px 18px 14px}
+.tb{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 13px;border-radius:11px;border:1px solid var(--border);background:var(--glass-2);color:var(--text);font-weight:600;font-size:13px;transition:background .15s,transform .15s}
+.tb:hover{background:var(--hover)}
+.tb:active{transform:scale(.98)}
+.tb.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.tb.primary:hover{filter:brightness(1.07);background:var(--accent)}
+.tb.del:hover{color:var(--danger)}
+.tb:disabled{opacity:.42;cursor:not-allowed}
+.tb:disabled:hover{background:var(--glass-2);color:var(--text)}
+kbd{font:500 11px/1 var(--font);padding:3px 6px;border-radius:6px;background:var(--hover);color:var(--muted);border:1px solid var(--line)}
+.tb kbd{display:none}
+
+.lh,.row{display:grid;grid-template-columns:minmax(0,1fr) 84px 176px;gap:12px;align-items:center}
+.lh{padding:6px 28px 8px 28px;font-size:12px;color:var(--faint);font-weight:500}
+.lh span:nth-child(2){text-align:right}
+.rows{flex:1;min-height:0;overflow:auto;padding:0 14px 8px;outline:none}
+.row{height:46px;padding:0 14px;border-radius:12px;border:1px solid transparent;cursor:default;user-select:none}
+.row:hover{background:var(--hover)}
+.row.sel{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 38%,transparent)}
+.nm{display:flex;align-items:center;gap:12px;min-width:0}
+.nm .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--hover);color:var(--muted)}
+.ico.dir{background:var(--accent-soft);color:var(--accent)}
+.sz,.md{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sz{text-align:right}
+.empty{display:grid;place-items:center;gap:6px;text-align:center;padding:56px 20px;color:var(--muted)}
+.empty b{color:var(--text);font-size:15px}
+.bar{display:flex;justify-content:space-between;gap:12px;padding:11px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.bar .safe{display:inline-flex;align-items:center;gap:6px}
+
+.details{padding:22px 20px;border-left:1px solid var(--line);background:var(--glass-2);overflow:auto;min-height:0}
+.d-tile{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--glass);border:1px solid var(--border);box-shadow:inset 0 1px 0 var(--hi);color:var(--muted)}
+.d-tile.dir{color:var(--accent)}
+.details h2{margin:14px 0 8px;font-size:18px;font-weight:700;letter-spacing:-.015em;word-break:break-word;line-height:1.3}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--hover);color:var(--muted)}
+.chip.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+dl{display:grid;grid-template-columns:76px 1fr;gap:9px 12px;margin:0;font-size:13px}
+dt{color:var(--faint)} dd{margin:0;word-break:break-word}
+.pv{margin-top:18px;border-radius:14px;background:var(--field);border:1px solid var(--line);padding:12px 14px;font:12px/1.65 var(--mono);color:var(--muted);max-height:190px;overflow:hidden;white-space:pre;-webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+.pv.note{font:13px/1.5 var(--font);white-space:normal;-webkit-mask-image:none;mask-image:none}
+.d-empty{display:grid;gap:10px;justify-items:start;color:var(--muted);padding-top:6px}
+
+/* ---------- dialogs, menu, toasts ---------- */
+#layer{position:fixed;inset:0;z-index:50;pointer-events:none}
+.scrim{position:absolute;inset:0;display:grid;place-items:center;padding:16px;pointer-events:auto;background:rgba(8,12,28,.34);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:fade .18s ease-out}
+.sheet{width:min(480px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:22px;padding:24px;background:var(--sheet);-webkit-backdrop-filter:blur(34px) saturate(170%);backdrop-filter:blur(34px) saturate(170%);border:1px solid var(--border);box-shadow:var(--shadow),inset 0 1px 0 var(--hi);animation:rise .22s cubic-bezier(.2,.8,.2,1)}
+.sheet.wide{width:min(760px,100%)}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(10px) scale(.985)}}
+.sheet h3{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.015em}
+.sheet .sub{margin:0 0 18px;color:var(--muted);font-size:13.5px}
+.sheet label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin:0 0 7px}
+.count{font-weight:500;color:var(--faint);font-variant-numeric:tabular-nums}
+.sheet input[type=text],.sheet textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--text);font-size:14px;transition:border-color .15s,box-shadow .15s}
+.sheet textarea{font:13px/1.6 var(--mono);resize:vertical;min-height:130px}
+.sheet input:focus,.sheet textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.hint{display:flex;gap:8px;align-items:flex-start;min-height:22px;margin:9px 2px 16px;font-size:13px;color:var(--muted)}
+.hint svg{margin-top:2px}
+.hint.ok{color:var(--ok)} .hint.err{color:var(--err)}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.btn{height:38px;padding:0 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass-2);font-weight:600;font-size:13.5px}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.primary:hover{background:var(--accent);filter:brightness(1.07)}
+.btn.danger{background:var(--danger);color:#fff;border-color:transparent}
+.btn.danger:hover{background:var(--danger);filter:brightness(1.07)}
+.btn:disabled{opacity:.42;cursor:not-allowed;filter:none}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.warn-ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger);margin-bottom:14px}
+.code{display:grid;grid-template-columns:auto 1fr;column-gap:16px;font:12.5px/1.75 var(--mono);max-height:52vh;overflow:auto;background:var(--field);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.code .ln{color:var(--faint);text-align:right;user-select:none;white-space:pre}
+.code .tx{white-space:pre;color:var(--text)}
+
+.ctx{position:fixed;z-index:60;min-width:216px;padding:6px;border-radius:14px;background:var(--sheet);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);border:1px solid var(--border);box-shadow:var(--shadow),inset 0 1px 0 var(--hi);animation:fade .12s ease-out}
+.ci{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:0;border-radius:9px;background:none;text-align:left;font-size:13.5px}
+.ci:hover,.ci:focus-visible{background:var(--hover)}
+.ci kbd{margin-left:auto}
+.ci.danger{color:var(--danger)}
+.ctx hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
+
+#toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:grid;gap:8px;z-index:70;width:min(580px,calc(100% - 32px));pointer-events:none}
+.toast{display:flex;gap:11px;align-items:flex-start;padding:12px 15px;border-radius:14px;background:var(--sheet);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);border:1px solid var(--border);box-shadow:var(--shadow),inset 0 1px 0 var(--hi);pointer-events:auto;animation:rise .24s cubic-bezier(.2,.8,.2,1)}
+.toast svg{margin-top:1px}
+.toast.ok svg{color:var(--ok)} .toast.err svg{color:var(--err)} .toast.info svg{color:var(--accent)}
+.toast.out{opacity:0;transform:translateY(6px);transition:opacity .22s,transform .22s}
+
+/* developer panel: spec coverage and file_ops log */
+.dev{position:fixed;z-index:40;top:16px;right:16px;bottom:16px;width:344px;max-width:calc(100% - 32px);border-radius:22px;padding:20px;overflow:auto;background:var(--sheet);transform:translateX(calc(100% + 30px));transition:transform .32s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+.dev.open{transform:none;visibility:visible}
+.dev header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dev h4{margin:0;font-size:15px;font-weight:700}
+.dev h5{margin:20px 0 8px;font-size:13px;font-weight:600;color:var(--muted)}
+.meter{height:6px;border-radius:3px;background:var(--hover);overflow:hidden;margin:0 0 12px}
+.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+ul.cov{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+ul.cov li{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:13.5px}
+.tick{width:18px;height:18px;margin-top:2px;border-radius:50%;border:1.5px solid var(--faint);display:grid;place-items:center;color:transparent}
+li.done .tick{background:var(--ok);border-color:var(--ok);color:#fff}
+ul.cov small{display:block;color:var(--muted);font-size:12px;line-height:1.4}
+#log{list-style:none;margin:0;padding:0;font:11.5px/1.7 var(--mono);max-height:210px;overflow:auto}
+#log li{white-space:nowrap;color:var(--ok)} #log li.err{color:var(--err)} #log li.none{color:var(--muted)}
+.sim{display:grid;gap:8px}
+.sim p{margin:0;color:var(--muted);font-size:12.5px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1120px){
+  .app{grid-template-columns:196px minmax(0,1fr) 268px}
+  .tb .lbl,.tb kbd{display:none} .tb{padding:0 11px}
+  .tb.primary .lbl{display:inline}
+}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr);height:auto;min-height:0;margin:12px auto}
+  .side{display:none}
+  .details{border-left:0;border-top:1px solid var(--line)}
+  .rows{max-height:46vh}
+  .wc{display:none}
+}
+@media (max-width:640px){
+  .lh,.row{grid-template-columns:minmax(0,1fr) 72px}
+  .lh span:nth-child(3),.row .md{display:none}
+  .pill .pl{display:none}
+}
+
+/* accessibility fallbacks for glass */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass,.sheet,.dev,.toast,.ctx{background:var(--glass-solid)}
+}
+@media (prefers-reduced-transparency:reduce){
+  .glass,.sheet,.dev,.toast,.ctx{background:var(--glass-solid);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .blob{opacity:.25}
+}
+@media (prefers-reduced-motion:reduce){
+  .blob{animation:none}
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="blobs" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+
+<div class="app glass" id="app">
+  <nav class="side" aria-label="Folders">
+    <div class="brand"><span class="mark"></span>Files</div>
+    <div id="tree"></div>
+    <p class="side-foot">This is a mockup. The disk is simulated, so nothing here touches your real files.</p>
+  </nav>
+
+  <section class="main" aria-label="Current folder">
+    <nav class="menubar" id="menubar" role="menubar" aria-label="Main menu"></nav>
+    <header class="top">
+      <button class="ib" data-act="up" id="upbtn" aria-label="Up one folder" title="Up one folder (Backspace)"></button>
+      <div class="crumbs" id="crumbs" aria-label="Location"></div>
+      <span class="grow"></span>
+      <button class="pill" data-act="dev" id="devbtn" aria-expanded="false" aria-controls="dev"><span class="pl">Spec checklist</span><b id="devcnt">0/10</b></button>
+      <button class="ib" data-act="theme" id="themebtn" aria-label="Switch light or dark theme" title="Switch theme"></button>
+      <span class="wc" aria-hidden="true"><i id="wc1"></i><i id="wc2"></i><i id="wc3"></i></span>
+    </header>
+    <div class="tools" id="tools" role="toolbar" aria-label="File operations"></div>
+    <div class="lh" aria-hidden="true"><span>Name</span><span>Size</span><span class="mdh">Modified</span></div>
+    <div class="rows" id="rows" role="listbox" aria-label="Files and folders" tabindex="0"></div>
+    <footer class="bar" id="bar"></footer>
+  </section>
+
+  <aside class="details" id="details" aria-label="Details"></aside>
+</div>
+
+<aside class="dev glass" id="dev" aria-label="Spec checklist and file_ops log">
+  <header><h4>Spec checklist</h4><button class="ib" data-act="dev-close" aria-label="Close panel" id="devx"></button></header>
+  <div class="meter"><i id="meterfill"></i></div>
+  <ul class="cov" id="cov"></ul>
+  <h5>What the interface asks file_ops to do</h5>
+  <ul id="log"></ul>
+  <h5>Try a failure</h5>
+  <div class="sim">
+    <p>Delete the selected file behind the app&rsquo;s back, like File Explorer could. Then open, append to or delete it here.</p>
+    <button class="btn" data-act="sim">Delete selected file outside the app</button>
+    <button class="btn" data-act="reset">Reset demo</button>
+  </div>
+</aside>
+
+<div id="layer"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- icons ---------- */
+const ICON = {
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>',
+  file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  append:'<path d="M4 6h16M4 12h10M4 18h6"/><path d="M17 15v6M14 18h6"/>',
+  rename:'<path d="M4 7V5h16v2M9 19h6M12 5v14"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>',
+  up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+  moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  alert:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+  checkc:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+  check:'<path d="M5 12l5 5 9-10"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  chev:'<path d="M9 6l6 6-6 6"/>',
+  drive:'<rect x="3" y="14" width="18" height="6" rx="2"/><path d="M3 14l3-8h12l3 8M7 17h.01"/>',
+  min:'<path d="M5 12h14"/>',
+  sq:'<rect x="5.5" y="5.5" width="13" height="13" rx="2"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/>'
+};
+const icon = (n, s) => '<svg width="'+(s||18)+'" height="'+(s||18)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[n]+'</svg>';
+
+/* ---------- helpers ---------- */
+const p2 = n => String(n).padStart(2,'0');
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtMod(t){ const d=new Date(t); let h=d.getHours(); const ap=h>=12?'PM':'AM'; h=h%12||12; return MON[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+', '+h+':'+p2(d.getMinutes())+' '+ap; }
+function fmtSize(n){ return n<1024 ? n+' B' : n<1048576 ? (n/1024).toFixed(1)+' KB' : (n/1048576).toFixed(1)+' MB'; }
+function byteLen(c){ return new TextEncoder().encode(c.replace(/\n/g,'\r\n')).length; }
+const ci = (a,b) => a.toLowerCase() === b.toLowerCase();
+const lastOf = a => a[a.length-1];
+const sameSegs = (a,b) => a.length===b.length && a.every((s,i) => ci(s,b[i]));
+const plural = (n,w) => n+' '+w+(n===1?'':'s');
+
+/* ---------- simulated disk (case-insensitive, like Windows) ---------- */
+const T = (y,m,d,h,mi) => new Date(y,m-1,d,h,mi).getTime();
+function seed(){
+  const f = (c,m,o) => Object.assign({t:'f',c,m}, o||{});
+  const d = (chd,m) => ({t:'d',ch:chd,m});
+  return {
+    'D:': d({
+      Projects: d({
+        demo: d({
+          docs: d({
+            'spec.txt': f('Simple File Management System\nCreate, read, append, rename, delete.\nEvery file call is checked for errors.\n', T(2026,10,12,9,5)),
+            'design-notes.txt': f('Layers: main, app, ui, file_ops.\nfile_ops never prints.\nThe interface turns status codes into messages.\n', T(2026,10,14,16,20))
+          }, T(2026,10,14,16,20)),
+          archive: d({
+            'old-report.txt': f('Last term report.\nKeep for reference.\n', T(2026,6,3,11,30))
+          }, T(2026,6,3,11,30)),
+          'notes.txt': f('Meeting notes, 17 Oct\n- Finish file_ops tests\n- Review the delete confirmation\n- Demo on Monday\n', T(2026,10,17,15,42)),
+          'todo.txt': f('[x] Design the layers\n[x] Write file_ops\n[ ] Polish the viewer\n[ ] Write the README\n', T(2026,10,16,8,15)),
+          'readme.txt': f('Simple File Manager\nPress N for a new file.\nNothing is ever overwritten silently.\n', T(2026,10,10,19,2)),
+          'LOCKED.TXT': f('This file is read-only.\nTry to append to it or delete it.\n', T(2026,9,1,10,0), {ro:true}),
+          'logo.bin': f('', T(2026,8,20,14,48), {bin:true, sz:2048}),
+          'shopping list for the weekend.txt': f('eggs\nrice\ncoffee\nmangoes\n', T(2026,10,15,18,30))
+        }, T(2026,10,17,15,42)),
+        backup: d({
+          'notes_old.txt': f('Old notes from September.\n', T(2026,9,28,13,12)),
+          'config.ini': f('[view]\ntheme=glass\nconfirm_delete=yes\n', T(2026,9,2,9,0)),
+          'data.csv': f('name,size\nnotes.txt,322\ntodo.txt,81\n', T(2026,10,1,17,45))
+        }, T(2026,10,1,17,45))
+      }, T(2026,10,17,15,42))
+    }, T(2026,10,1,8,0))
+  };
+}
+let root, cwd, selName, shown, logs, cov;
+const rootKey = n => { for (const k in root) if (ci(k,n)) return k; return null; };
+function findKey(node,name){ if (!node || node.t!=='d') return null; for (const k in node.ch) if (ci(k,name)) return k; return null; }
+function getNode(segs){
+  const rk = rootKey(segs[0]); if (rk===null) return null;
+  let n = root[rk];
+  for (let i=1;i<segs.length;i++){ const k=findKey(n,segs[i]); if (k===null) return null; n=n.ch[k]; }
+  return n;
+}
+const pathStr = segs => segs[0] + (segs.length>1 ? '\\'+segs.slice(1).join('\\') : '\\');
+const sizeOf = n => n.sz !== undefined ? n.sz : byteLen(n.c);
+
+/* ---------- file_ops (pure logic, never touches the screen) ---------- */
+const OK = 'FM_OK';
+const R = (code,detail,node) => ({code, detail:detail||'', node:node||null});
+function L(fn,args,r){ logs.unshift({t:fn+'('+args+') → '+r.code, ok:r.code===OK}); if (logs.length>60) logs.pop(); return r; }
+function fm_validate(input){
+  const s = input.replace(/\//g,'\\');
+  if (!s.trim()) return R('FM_ERR_INVALID_NAME','The name is empty.');
+  const parts = s.split('\\');
+  for (let i=0;i<parts.length;i++){
+    const c = parts[i], first = i===0, last = i===parts.length-1;
+    if (first && /^[A-Za-z]:$/.test(c)){ if (last) return R('FM_ERR_INVALID_NAME','A drive is not a file name.'); continue; }
+    if (c===''){ if (last) return R('FM_ERR_INVALID_NAME','The path ends with "\\", so there is no file name.'); continue; }
+    if (c==='.' || c==='..'){ if (last) return R('FM_ERR_INVALID_NAME','"'+c+'" is not a valid file name.'); continue; }
+    if (c.length>255) return R('FM_ERR_INVALID_NAME','A name part is longer than 255 characters.');
+    const bad = c.match(/[<>:"|?*\u0000-\u001f]/);
+    if (bad) return R('FM_ERR_INVALID_NAME','The character "'+(bad[0].charCodeAt(0)<32?'control code':bad[0])+'" is not allowed in file names.');
+    if (/[ .]$/.test(c)) return R('FM_ERR_INVALID_NAME','Names cannot end with a space or a dot.');
+    if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i.test(c)) return R('FM_ERR_INVALID_NAME','"'+c+'" is a reserved Windows device name.');
+  }
+  return R(OK);
+}
+function resolveInput(input, base){
+  const v = fm_validate(input); if (v.code!==OK) return {err:v};
+  const s = input.trim().replace(/\//g,'\\');
+  let segs; const dm = s.match(/^([A-Za-z]:)(\\.*)?$/);
+  if (dm) segs = [dm[1].toUpperCase()].concat((dm[2]||'').split('\\')); else segs = base.slice().concat(s.split('\\'));
+  const out=[];
+  for (const g of segs){ if (g===''||g==='.') continue; if (g==='..'){ if (out.length>1) out.pop(); continue; } out.push(g); }
+  if (pathStr(out).length>=260) return {err:R('FM_ERR_PATH_TOO_LONG')};
+  return {segs:out};
+}
+function fm_exists(segs){ const r = getNode(segs) ? 1 : 0; logs.unshift({t:'fm_exists("'+lastOf(segs)+'") → '+r, ok:true}); return r; }
+function fm_get_info(segs){ const n = getNode(segs); return L('fm_get_info','"'+lastOf(segs)+'"', n ? R(OK,'',n) : R('FM_ERR_NOT_FOUND')); }
+function fm_create(segs, content){
+  const a = '"'+lastOf(segs)+'", '+byteLen(content)+' bytes';
+  const parent = getNode(segs.slice(0,-1));
+  if (!parent || parent.t!=='d') return L('fm_create',a,R('FM_ERR_NOT_FOUND'));
+  if (findKey(parent,lastOf(segs))!==null) return L('fm_create',a,R('FM_ERR_EXISTS'));   // O_CREAT | O_EXCL
+  parent.ch[lastOf(segs)] = {t:'f', c:content, m:Date.now()};
+  return L('fm_create',a,R(OK));
+}
+function fm_read(segs){
+  const a = '"'+lastOf(segs)+'"', n = getNode(segs);
+  if (!n) return L('fm_read',a,R('FM_ERR_NOT_FOUND'));
+  if (n.t==='d') return L('fm_read',a,R('FM_ERR_IS_DIR'));
+  if (n.bin) return L('fm_read',a,R('FM_ERR_BINARY'));
+  return L('fm_read',a,R(OK,'',n));
+}
+function fm_append(segs, content){
+  const a = '"'+lastOf(segs)+'", '+byteLen(content)+' bytes', n = getNode(segs);        // O_APPEND, no O_CREAT
+  if (!n) return L('fm_append',a,R('FM_ERR_NOT_FOUND'));
+  if (n.t==='d') return L('fm_append',a,R('FM_ERR_IS_DIR'));
+  if (n.ro) return L('fm_append',a,R('FM_ERR_PERMISSION'));
+  if (n.c && !n.c.endsWith('\n')) n.c += '\n';
+  n.c += content; n.m = Date.now();
+  return L('fm_append',a,R(OK));
+}
+function fm_rename(o,n2){
+  const a = '"'+lastOf(o)+'", "'+lastOf(n2)+'"', node = getNode(o);
+  if (!node) return L('fm_rename',a,R('FM_ERR_NOT_FOUND'));
+  if (!ci(o[0],n2[0])) return L('fm_rename',a,R('FM_ERR_CROSS_DEVICE'));
+  const np = getNode(n2.slice(0,-1)), op = getNode(o.slice(0,-1));
+  if (!np || np.t!=='d') return L('fm_rename',a,R('FM_ERR_NOT_FOUND'));
+  const nk = findKey(np,lastOf(n2));
+  if (nk!==null){ const same = np===op && ci(nk,lastOf(o)); if (!same) return L('fm_rename',a,R('FM_ERR_EXISTS')); }
+  delete op.ch[findKey(op,lastOf(o))];
+  np.ch[lastOf(n2)] = node;
+  return L('fm_rename',a,R(OK));
+}
+function fm_delete(segs){
+  const a = '"'+lastOf(segs)+'"', n = getNode(segs);
+  if (!n) return L('fm_delete',a,R('FM_ERR_NOT_FOUND'));
+  if (n.t==='d') return L('fm_delete',a,R('FM_ERR_IS_DIR'));
+  if (n.ro) return L('fm_delete',a,R('FM_ERR_PERMISSION'));
+  const parent = getNode(segs.slice(0,-1));
+  delete parent.ch[findKey(parent,lastOf(segs))];
+  return L('fm_delete',a,R(OK));
+}
+function errMsg(op, name, r){
+  const verb = {create:'create',read:'open',append:'append to',rename:'rename',delete:'delete'}[op];
+  switch (r.code){
+    case 'FM_ERR_EXISTS': return op==='rename' ? 'Cannot rename: "'+name+'" already exists.' : 'Cannot create "'+name+'": it already exists. Nothing was changed.';
+    case 'FM_ERR_NOT_FOUND': return op==='create' ? 'Cannot create "'+name+'": that folder does not exist.' : 'Cannot '+verb+' "'+name+'": it no longer exists. The list has been refreshed.';
+    case 'FM_ERR_PERMISSION': return 'Cannot '+verb+' "'+name+'": it is read-only.';
+    case 'FM_ERR_IS_DIR': return 'Cannot '+verb+' "'+name+'": it is a folder.';
+    case 'FM_ERR_BINARY': return '"'+name+'" is a binary file, so it cannot be shown as text.';
+    case 'FM_ERR_CROSS_DEVICE': return 'Cannot rename across drives.';
+    case 'FM_ERR_PATH_TOO_LONG': return 'Cannot '+verb+' "'+name+'": the path is 260 characters or longer.';
+    case 'FM_ERR_INVALID_NAME': return 'Cannot '+verb+' "'+name+'": '+r.detail;
+    default: return 'Something went wrong while trying to '+verb+' "'+name+'".';
+  }
+}
+
+/* ---------- state ---------- */
+function ensureCwd(){ while (cwd.length>1 && !(getNode(cwd) && getNode(cwd).t==='d')) cwd.pop(); }
+function entries(){
+  const n = getNode(cwd); if (!n) return [];
+  const keys = Object.keys(n.ch).sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+  const mk = k => ({name:k, node:n.ch[k], dir:n.ch[k].t==='d'});
+  return keys.filter(k => n.ch[k].t==='d').map(mk).concat(keys.filter(k => n.ch[k].t==='f').map(mk));
+}
+function refresh(){
+  ensureCwd(); shown = entries();
+  if (selName && !shown.some(e => e.name===selName)) selName = null;
+  render();
+}
+function mark(k){ cov.add(k); }
+function init(){
+  root = seed(); cwd = ['D:','Projects','demo']; selName = 'notes.txt'; logs = []; cov = new Set();
+  closeSheet(); closeCtx(); closeMenu(); refresh();
+}
+
+/* ---------- rendering ---------- */
+function renderTree(){
+  const draw = (node,segs,depth) => Object.keys(node.ch)
+    .sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+    .filter(k => node.ch[k].t==='d')
+    .map(k => { const s = segs.concat(k); return btnNode(s,k,depth,'folder') + draw(node.ch[k],s,depth+1); }).join('');
+  const btnNode = (s,label,depth,ic) => '<button class="node'+(sameSegs(s,cwd)?' cur':'')+'" style="padding-left:'+(10+depth*14)+'px" data-go="'+esc(s.join('|'))+'">'+icon(ic,16)+'<span>'+esc(label)+'</span></button>';
+  let h = '';
+  for (const k in root) h += btnNode([k],k,0,'drive') + draw(root[k],[k],1);
+  $('#tree').innerHTML = h;
+}
+function renderTop(){
+  $('#crumbs').innerHTML = cwd.map((s,i) => {
+    const last = i===cwd.length-1;
+    return (i? '<span class="sep" aria-hidden="true">'+icon('chev',14)+'</span>' : '') +
+      '<button class="crumb'+(last?' last':'')+'"'+(last?' aria-current="page"':'')+' data-go="'+esc(cwd.slice(0,i+1).join('|'))+'">'+esc(s)+'</button>';
+  }).join('');
+  $('#upbtn').innerHTML = icon('up',18); $('#upbtn').disabled = cwd.length<2;
+  const dark = isDark();
+  $('#themebtn').innerHTML = icon(dark?'sun':'moon',18);
+  $('#wc1').innerHTML = icon('min',14); $('#wc2').innerHTML = icon('sq',13); $('#wc3').innerHTML = icon('x',15);
+}
+function renderTools(){
+  const has = !!selName;
+  const b = (act,ic,label,key,cls) => '<button class="tb'+(cls?' '+cls:'')+'" data-act="'+act+'"'+(act!=='new'&&!has?' disabled':'')+' title="'+label+(key?' ('+key+')':'')+'">'+icon(ic,17)+'<span class="lbl">'+label+'</span>'+(key?'<kbd>'+key+'</kbd>':'')+'</button>';
+  $('#tools').innerHTML = b('new','plus','New file','N','primary') + b('open','eye','Open','Enter') + b('append','append','Append','A') + b('rename','rename','Rename','F2') + b('delete','trash','Delete','Del','del');
+}
+function renderRows(){
+  const el = $('#rows'), st = el.scrollTop;
+  if (!shown.length){
+    el.innerHTML = '<div class="empty">'+icon('folder',30)+'<b>This folder is empty</b><span>Press N to create a file.</span></div>';
+  } else {
+    el.innerHTML = shown.map(e => {
+      const sel = e.name===selName;
+      return '<div class="row'+(sel?' sel':'')+'" role="option" aria-selected="'+sel+'" data-name="'+esc(e.name)+'">' +
+        '<div class="nm"><span class="ico'+(e.dir?' dir':'')+'">'+icon(e.dir?'folder':'file',16)+'</span><span class="t">'+esc(e.name)+'</span></div>' +
+        '<span class="sz">'+(e.dir?'':fmtSize(sizeOf(e.node)))+'</span><span class="md">'+fmtMod(e.node.m)+'</span></div>';
+    }).join('');
+  }
+  el.scrollTop = st;
+}
+function renderDetails(){
+  const el = $('#details'), e = shown.find(x => x.name===selName);
+  if (!e){
+    el.innerHTML = '<div class="d-empty">'+icon('file',30)+'<span>Select a file to see its details here.</span></div>';
+    return;
+  }
+  const n = e.node, kind = e.dir ? 'Folder' : n.bin ? 'Binary file' : 'Text file';
+  let pv;
+  if (e.dir) pv = '<div class="pv note">'+plural(Object.keys(n.ch).length,'item')+' inside.</div>';
+  else if (n.bin) pv = '<div class="pv note">This is a binary file, so there is no text preview.</div>';
+  else pv = '<div class="pv"><code>'+esc(n.c.replace(/\r/g,'').split('\n').slice(0,10).join('\n'))+'</code></div>';
+  el.innerHTML =
+    '<div class="d-tile'+(e.dir?' dir':'')+'">'+icon(e.dir?'folder':'file',26)+'</div>' +
+    '<h2>'+esc(e.name)+'</h2>' +
+    '<div class="chips"><span class="chip">'+kind+'</span>'+(n.ro?'<span class="chip warn">Read-only</span>':'')+'</div>' +
+    '<dl><dt>Size</dt><dd>'+(e.dir?plural(Object.keys(n.ch).length,'item'):fmtSize(sizeOf(n))+' ('+sizeOf(n)+' bytes)')+'</dd>' +
+    '<dt>Modified</dt><dd>'+fmtMod(n.m)+'</dd>' +
+    '<dt>Location</dt><dd>'+esc(pathStr(cwd))+'</dd>' +
+    '<dt>Read-only</dt><dd>'+(n.ro?'Yes':'No')+'</dd></dl>' + pv;
+}
+function renderBar(){
+  const e = shown.find(x => x.name===selName);
+  $('#bar').innerHTML = '<span>'+plural(shown.length,'item')+(e?', 1 selected':'')+'</span><span class="safe">'+icon('shield',15)+'Nothing is overwritten without asking</span>';
+}
+const COV = [
+  ['create','Create a file','Press N. It never overwrites.'],
+  ['read','Read a file','Press Enter to open the viewer.'],
+  ['append','Append to a file','Press A. The file must already exist.'],
+  ['rename','Rename a file','Press F2. Name conflicts show as you type.'],
+  ['delete','Delete with confirmation','Press Delete. Cancel is the default.'],
+  ['info','Show file information','Select any file or folder.'],
+  ['noover','Overwrite blocked','Type an existing name in New or Rename.'],
+  ['invalid','Bad name rejected','Try a?b.txt or CON.'],
+  ['missing','Missing-file check','Use the failure button below, then open that file.'],
+  ['menu','Menu navigation','Open the File menu with Alt+F or F10.']
+];
+function renderDev(){
+  $('#cov').innerHTML = COV.map(c => '<li class="'+(cov.has(c[0])?'done':'')+'"><span class="tick">'+icon('check',11)+'</span><span>'+c[1]+'<small>'+c[2]+'</small></span></li>').join('');
+  $('#devcnt').textContent = cov.size+'/'+COV.length;
+  $('#meterfill').style.width = (cov.size/COV.length*100)+'%';
+  $('#log').innerHTML = logs.length ? logs.slice(0,40).map(l => '<li class="'+(l.ok?'':'err')+'">'+esc(l.t)+'</li>').join('') : '<li class="none">Nothing yet. Press N to create a file.</li>';
+}
+function render(){ renderTree(); renderTop(); renderTools(); renderRows(); renderDetails(); renderBar(); renderDev(); }
+
+/* ---------- selection and navigation ---------- */
+function select(name,noScroll){
+  selName = name;
+  const e = shown.find(x => x.name===name); if (e) mark('info');
+  render();
+  if (!noScroll){ const r = $('.row.sel'); if (r) r.scrollIntoView({block:'nearest'}); }
+}
+function moveSel(d){
+  if (!shown.length) return;
+  let i = shown.findIndex(e => e.name===selName);
+  i = i<0 ? (d>0?0:shown.length-1) : Math.max(0,Math.min(shown.length-1,i+d));
+  select(shown[i].name);
+}
+function go(segs){ if (!getNode(segs)) return; cwd = segs.slice(); selName = null; refresh(); }
+function goUp(){ if (cwd.length<2) return; const prev = lastOf(cwd); cwd = cwd.slice(0,-1); selName = prev; refresh(); const r=$('.row.sel'); if (r) r.scrollIntoView({block:'nearest'}); }
+
+/* ---------- toasts ---------- */
+function toast(kind,text){
+  const host = $('#toasts'), el = document.createElement('div');
+  el.className = 'toast '+kind; el.setAttribute('role', kind==='err'?'alert':'status');
+  el.innerHTML = icon(kind==='ok'?'checkc':kind==='err'?'alert':'info',18)+'<span>'+esc(text)+'</span>';
+  host.appendChild(el);
+  while (host.children.length>3) host.firstChild.remove();
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(),260); }, kind==='err'?6500:3400);
+}
+
+/* ---------- dialogs ---------- */
+let sheetEl = null, ctxEl = null, lastFocus = null, devOpen = false;
+function openSheet(inner,wide){
+  closeCtx(); closeMenu(); if (sheetEl) closeSheet(true);
+  lastFocus = document.activeElement;
+  const sc = document.createElement('div'); sc.className = 'scrim';
+  sc.innerHTML = '<div class="sheet'+(wide?' wide':'')+'" role="dialog" aria-modal="true" aria-labelledby="sh-t">'+inner+'</div>';
+  $('#layer').appendChild(sc); sheetEl = sc;
+  sc.addEventListener('mousedown', e => { if (e.target===sc) closeSheet(); });
+  return sc.firstChild;
+}
+function closeSheet(keepFocus){
+  if (!sheetEl) return;
+  sheetEl.remove(); sheetEl = null;
+  if (!keepFocus && lastFocus && lastFocus.focus){ try { lastFocus.focus(); } catch(e){} }
+}
+function trapTab(e){
+  const f = [].slice.call(sheetEl.querySelectorAll('button:not(:disabled),input,textarea')).filter(x => x.offsetParent!==null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length-1];
+  if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+function setHint(el,state,msg){
+  el.className = 'hint'+(state==='ok'?' ok':state==='err'?' err':'');
+  el.innerHTML = icon(state==='ok'?'check':state==='err'?'alert':'info',15)+'<span>'+esc(msg)+'</span>';
+}
+/* live check used by New and Rename: shows the problem before anything can happen */
+function checkTarget(input,mode,old){
+  const v = input.trim();
+  if (!v) return {state:'idle',msg:'Enter a file name or a path.'};
+  const rs = resolveInput(v,cwd);
+  if (rs.err){ mark('invalid'); renderDev(); return {state:'err',msg:rs.err.code==='FM_ERR_PATH_TOO_LONG'?'That path is 260 characters or longer.':rs.err.detail}; }
+  const parent = getNode(rs.segs.slice(0,-1));
+  if (!parent || parent.t!=='d') return {state:'err',msg:'That folder does not exist.'};
+  const ek = findKey(parent,lastOf(rs.segs));
+  if (ek!==null){
+    if (mode==='rename' && old && parent.ch[ek]===getNode(old)){
+      if (ek===lastOf(rs.segs)) return {state:'idle',msg:'That is the current name.'};
+      return {state:'ok',segs:rs.segs,msg:'Changing only the capital letters is fine.'};
+    }
+    mark('noover'); renderDev();
+    return {state:'err',msg:'"'+ek+'" already exists. '+(mode==='rename'?'Renaming':'Creating')+' never replaces a file.'};
+  }
+  return {state:'ok',segs:rs.segs,msg:'Available at '+pathStr(rs.segs)};
+}
+const withNewline = t => (t && !t.endsWith('\n')) ? t+'\n' : t;
+function selTarget(){
+  if (!selName){ toast('info','Select a file first.'); return null; }
+  return {name:selName, segs:cwd.concat(selName)};
+}
+function fail(op,name,r,stale){
+  if (stale && r.code==='FM_ERR_NOT_FOUND') mark('missing');
+  if (r.code==='FM_ERR_INVALID_NAME' || r.code==='FM_ERR_PATH_TOO_LONG') mark('invalid');
+  if (r.code==='FM_ERR_EXISTS') mark('noover');
+  if (stale) refresh(); else renderDev();
+  toast('err',errMsg(op,name,r));
+}
+
+function actNew(){
+  const sh = openSheet(
+    '<h3 id="sh-t">New file</h3><p class="sub">Give it a name or a path. An existing file is never replaced.</p>' +
+    '<label for="f-name">Name or path</label><input id="f-name" type="text" autocomplete="off" spellcheck="false" placeholder="notes.txt or docs\\ideas.txt">' +
+    '<div class="hint" id="f-hint"></div>' +
+    '<label for="f-content">Content <span class="count" id="f-count">0 bytes</span></label>' +
+    '<textarea id="f-content" spellcheck="false" placeholder="Optional. Type or paste text."></textarea>' +
+    '<div class="actions"><button class="btn" data-x="cancel">Cancel</button><button class="btn primary" id="f-go" disabled>Create file</button></div>');
+  const nameEl = $('#f-name',sh), hintEl = $('#f-hint',sh), contEl = $('#f-content',sh), go = $('#f-go',sh), cnt = $('#f-count',sh);
+  let chk = {state:'idle'};
+  function update(){ chk = checkTarget(nameEl.value,'create'); setHint(hintEl,chk.state,chk.msg); go.disabled = chk.state!=='ok'; }
+  function submit(){
+    if (chk.state!=='ok') return;
+    const name = lastOf(chk.segs), text = withNewline(contEl.value);
+    if (fm_exists(chk.segs)){ setHint(hintEl,'err','"'+name+'" already exists. Creating never replaces a file.'); mark('noover'); renderDev(); return; }
+    const r = fm_create(chk.segs,text);
+    if (r.code!==OK){ setHint(hintEl,'err',errMsg('create',name,r)); if (r.code==='FM_ERR_EXISTS') mark('noover'); renderDev(); return; }
+    closeSheet(); mark('create');
+    toast('ok','Created "'+name+'" ('+byteLen(text)+' bytes).');
+    if (sameSegs(chk.segs.slice(0,-1),cwd)) selName = name;
+    refresh(); const row=$('.row.sel'); if (row) row.scrollIntoView({block:'nearest'});
+  }
+  nameEl.addEventListener('input',update);
+  nameEl.addEventListener('keydown',e => { if (e.key==='Enter'){ e.preventDefault(); submit(); } });
+  contEl.addEventListener('input',() => { cnt.textContent = byteLen(contEl.value)+' bytes'; });
+  contEl.addEventListener('keydown',e => { if (e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); submit(); } });
+  go.addEventListener('click',submit);
+  update(); nameEl.focus();
+}
+function actOpen(){
+  const t = selTarget(); if (!t) return;
+  const node = getNode(t.segs);
+  if (node && node.t==='d'){ cwd = t.segs; selName = null; refresh(); return; }
+  const r = fm_read(t.segs);
+  if (r.code!==OK) return fail('read',t.name,r,r.code==='FM_ERR_NOT_FOUND');
+  mark('read');
+  const n = r.node, lines = n.c.replace(/\r/g,'').replace(/\t/g,'    ').split('\n');
+  if (lines.length>1 && lines[lines.length-1]==='') lines.pop();
+  openSheet(
+    '<h3 id="sh-t">'+esc(t.name)+'</h3><div class="meta"><span class="chip">'+fmtSize(sizeOf(n))+'</span><span class="chip">'+plural(lines.length,'line')+'</span>'+(n.ro?'<span class="chip warn">Read-only</span>':'')+'</div>' +
+    '<div class="code" tabindex="0" aria-label="File contents"><div class="ln">'+lines.map((_,i) => i+1).join('\n')+'</div><div class="tx">'+esc(lines.join('\n'))+'</div></div>' +
+    '<div class="actions"><button class="btn primary" data-x="cancel" id="v-close">Close</button></div>', true);
+  $('#v-close').focus();
+  renderDev();
+}
+function actAppend(){
+  const t = selTarget(); if (!t) return;
+  const gi = fm_get_info(t.segs);
+  if (gi.code!==OK) return fail('append',t.name,gi,true);
+  if (gi.node.t==='d') return fail('append',t.name,R('FM_ERR_IS_DIR'));
+  if (gi.node.ro) return fail('append',t.name,R('FM_ERR_PERMISSION'));
+  const sh = openSheet(
+    '<h3 id="sh-t">Append to '+esc(t.name)+'</h3><p class="sub">Your text is added to the end. Nothing already in the file changes.</p>' +
+    '<label for="a-text">Text to add <span class="count" id="a-count">0 bytes</span></label>' +
+    '<textarea id="a-text" spellcheck="false" placeholder="Type or paste text."></textarea>' +
+    '<div class="hint" id="a-hint"></div>' +
+    '<div class="actions"><button class="btn" data-x="cancel">Cancel</button><button class="btn primary" id="a-go" disabled>Append</button></div>');
+  const txt = $('#a-text',sh), go = $('#a-go',sh), hint = $('#a-hint',sh), cnt = $('#a-count',sh);
+  setHint(hint,'idle','Current size is '+fmtSize(sizeOf(gi.node))+'.');
+  function submit(){
+    if (!txt.value) return;
+    const text = withNewline(txt.value), r = fm_append(t.segs,text);
+    if (r.code!==OK){ closeSheet(); return fail('append',t.name,r,true); }
+    closeSheet(); mark('append');
+    toast('ok','Appended '+byteLen(text)+' bytes to "'+t.name+'".');
+    refresh();
+  }
+  txt.addEventListener('input',() => { go.disabled = !txt.value; cnt.textContent = byteLen(txt.value)+' bytes'; });
+  txt.addEventListener('keydown',e => { if (e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); submit(); } });
+  go.addEventListener('click',submit);
+  txt.focus();
+}
+function actRename(){
+  const t = selTarget(); if (!t) return;
+  const gi = fm_get_info(t.segs);
+  if (gi.code!==OK) return fail('rename',t.name,gi,true);
+  const sh = openSheet(
+    '<h3 id="sh-t">Rename</h3><p class="sub">Choose a new name for &ldquo;'+esc(t.name)+'&rdquo;.</p>' +
+    '<label for="r-name">New name</label><input id="r-name" type="text" autocomplete="off" spellcheck="false">' +
+    '<div class="hint" id="r-hint"></div>' +
+    '<div class="actions"><button class="btn" data-x="cancel">Cancel</button><button class="btn primary" id="r-go" disabled>Rename</button></div>');
+  const nameEl = $('#r-name',sh), hintEl = $('#r-hint',sh), go = $('#r-go',sh);
+  let chk = {state:'idle'};
+  nameEl.value = t.name;
+  function update(){ chk = checkTarget(nameEl.value,'rename',t.segs); setHint(hintEl,chk.state,chk.msg); go.disabled = chk.state!=='ok'; }
+  function submit(){
+    if (chk.state!=='ok') return;
+    const r = fm_rename(t.segs,chk.segs), nn = lastOf(chk.segs);
+    if (r.code!==OK){
+      if (r.code==='FM_ERR_NOT_FOUND' && !getNode(t.segs)){ closeSheet(); return fail('rename',t.name,r,true); }
+      setHint(hintEl,'err',errMsg('rename',r.code==='FM_ERR_EXISTS'?nn:t.name,r)); if (r.code==='FM_ERR_EXISTS') mark('noover'); renderDev(); return;
+    }
+    closeSheet(); mark('rename');
+    toast('ok','Renamed "'+t.name+'" to "'+nn+'".');
+    if (sameSegs(chk.segs.slice(0,-1),cwd)) selName = nn;
+    refresh(); const row=$('.row.sel'); if (row) row.scrollIntoView({block:'nearest'});
+  }
+  nameEl.addEventListener('input',update);
+  nameEl.addEventListener('keydown',e => { if (e.key==='Enter'){ e.preventDefault(); submit(); } });
+  go.addEventListener('click',submit);
+  update(); nameEl.focus();
+  const dot = t.name.lastIndexOf('.'); nameEl.setSelectionRange(0, dot>0 ? dot : t.name.length);
+}
+function actDelete(){
+  const t = selTarget(); if (!t) return;
+  const gi = fm_get_info(t.segs);
+  if (gi.code!==OK) return fail('delete',t.name,gi,true);
+  if (gi.node.t==='d') return fail('delete',t.name,R('FM_ERR_IS_DIR'));
+  if (gi.node.ro) return fail('delete',t.name,R('FM_ERR_PERMISSION'));
+  const sh = openSheet(
+    '<div class="warn-ico">'+icon('trash',22)+'</div><h3 id="sh-t">Delete &ldquo;'+esc(t.name)+'&rdquo;?</h3>' +
+    '<p class="sub">'+fmtSize(sizeOf(gi.node))+', last changed '+fmtMod(gi.node.m)+'. This cannot be undone.</p>' +
+    '<div class="actions"><button class="btn" id="d-no" data-x="cancel">Cancel</button><button class="btn danger" id="d-yes">Delete file</button></div>');
+  $('#d-no',sh).focus();
+  $('#d-yes',sh).addEventListener('click',() => {
+    const idx = shown.findIndex(e => e.name===t.name);
+    const r = fm_delete(t.segs);
+    if (r.code!==OK){ closeSheet(); return fail('delete',t.name,r,true); }
+    closeSheet(); mark('delete');
+    toast('ok','Deleted "'+t.name+'".');
+    selName = null; refresh();
+    if (shown.length){ select(shown[Math.min(idx,shown.length-1)].name,false); }
+  });
+}
+const ACTS = {new:actNew, open:actOpen, append:actAppend, rename:actRename, delete:actDelete};
+
+/* ---------- context menu ---------- */
+function closeCtx(){ if (ctxEl){ ctxEl.remove(); ctxEl = null; } }
+function openCtx(x,y){
+  closeCtx(); closeMenu(); mark('menu'); renderDev();
+  const m = document.createElement('div'); m.className = 'ctx'; m.setAttribute('role','menu');
+  const it = (act,ic,label,key,cls) => '<button class="ci'+(cls?' '+cls:'')+'" role="menuitem" data-cx="'+act+'">'+icon(ic,16)+'<span>'+label+'</span><kbd>'+key+'</kbd></button>';
+  m.innerHTML = it('open','eye','Open','Enter') + it('append','append','Append','A') + it('rename','rename','Rename','F2') + '<hr>' + it('delete','trash','Delete','Del','danger');
+  document.body.appendChild(m);
+  const w = m.offsetWidth, h = m.offsetHeight;
+  m.style.left = Math.max(8,Math.min(x,innerWidth-w-8))+'px';
+  m.style.top = Math.max(8,Math.min(y,innerHeight-h-8))+'px';
+  ctxEl = m; m.firstChild.focus();
+}
+
+/* ---------- developer panel, theme, failure demo ---------- */
+function toggleDev(open){
+  devOpen = open===undefined ? !devOpen : open;
+  $('#dev').classList.toggle('open',devOpen);
+  $('#devbtn').setAttribute('aria-expanded',devOpen);
+}
+const isDark = () => { const t = document.documentElement.getAttribute('data-theme'); return t ? t==='dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
+function toggleTheme(){ document.documentElement.setAttribute('data-theme', isDark()?'light':'dark'); renderTop(); }
+function simDelete(){
+  if (sheetEl) return;
+  const e = shown.find(x => x.name===selName);
+  if (!e || e.dir){ toast('info','Select a file (not a folder) first.'); return; }
+  const parent = getNode(cwd), k = findKey(parent,e.name);
+  if (k!==null) delete parent.ch[k];
+  toast('info','"'+e.name+'" was deleted outside the app. The list is out of date until you act on it.');
+}
+
+/* ---------- menu bar (File, Go, Help) ---------- */
+const MENUS = [
+  {label:'File', key:'f', items:[
+    ['new','plus','New file','N'], ['open','eye','Open','Enter'], ['append','append','Append','A'],
+    ['rename','rename','Rename','F2'], ['delete','trash','Delete','Del',1], '-',
+    ['props','info','File information','I'], ['refresh','refresh','Refresh','F5'], '-',
+    ['exit','x','Exit','']]},
+  {label:'Go', key:'g', items:[
+    ['up','up','Up one folder','Backspace'], '-',
+    ['home','folder','Open demo folder',''], ['backup','folder','Open backup folder','']]},
+  {label:'Help', key:'h', items:[
+    ['keys','info','Keyboard shortcuts',''], ['spec','checkc','Spec checklist','']]}
+];
+const NEEDS_FILE = ['open','append','rename','delete','props'];
+let menuEl = null, menuIdx = -1;
+function buildMenubar(){
+  $('#menubar').innerHTML = MENUS.map((m,i) =>
+    '<button class="mbtn" data-m="'+i+'" role="menuitem" aria-haspopup="true" aria-expanded="false" title="'+m.label+' menu (Alt+'+m.key.toUpperCase()+')">'+m.label+'</button>').join('');
+}
+function closeMenu(refocus){
+  if (menuEl){ menuEl.remove(); menuEl = null; }
+  const b = document.querySelector('.mbtn[aria-expanded="true"]');
+  if (b){ b.setAttribute('aria-expanded','false'); if (refocus) b.focus(); }
+  menuIdx = -1;
+}
+function toggleMenu(i,focusFirst){
+  if (menuIdx===i){ closeMenu(); return; }
+  closeMenu(); closeCtx(); mark('menu'); menuIdx = i;
+  const btn = document.querySelector('.mbtn[data-m="'+i+'"]');
+  btn.setAttribute('aria-expanded','true');
+  const has = !!selName, m = document.createElement('div');
+  m.className = 'ctx'; m.setAttribute('role','menu');
+  m.innerHTML = MENUS[i].items.map(it => {
+    if (it==='-') return '<hr>';
+    return '<button class="ci'+(it[4]?' danger':'')+'" role="menuitem" data-mi="'+it[0]+'"'+(NEEDS_FILE.indexOf(it[0])>=0 && !has ? ' disabled' : '')+'>'+
+      icon(it[1],16)+'<span>'+it[2]+'</span>'+(it[3]?'<kbd>'+it[3]+'</kbd>':'')+'</button>';
+  }).join('');
+  document.body.appendChild(m);
+  const r = btn.getBoundingClientRect();
+  m.style.left = Math.max(8,Math.min(r.left,innerWidth-m.offsetWidth-8))+'px';
+  m.style.top = (r.bottom+6)+'px';
+  menuEl = m; renderDev();
+  if (focusFirst){ const f = m.querySelector('.ci:not(:disabled)'); if (f) f.focus(); }
+}
+function menuKeys(e){
+  const items = [].slice.call(menuEl.querySelectorAll('.ci:not(:disabled)')), i = items.indexOf(document.activeElement);
+  if (e.key==='ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+  else if (e.key==='ArrowUp'){ e.preventDefault(); items[(i<0?0:i+items.length-1)%items.length].focus(); }
+  else if (e.key==='ArrowRight'){ e.preventDefault(); toggleMenu((menuIdx+1)%MENUS.length,true); }
+  else if (e.key==='ArrowLeft'){ e.preventDefault(); toggleMenu((menuIdx+MENUS.length-1)%MENUS.length,true); }
+  else if (e.key==='Tab'){ closeMenu(); }
+}
+function runMenu(id){
+  if (ACTS[id]){ mark('menu'); ACTS[id](); renderDev(); return; }
+  switch (id){
+    case 'props': actProps(); break;
+    case 'refresh': refresh(); toast('ok','Refreshed.'); break;
+    case 'exit': actExit(); break;
+    case 'up': goUp(); break;
+    case 'home': go(['D:','Projects','demo']); break;
+    case 'backup': go(['D:','Projects','backup']); break;
+    case 'keys': actKeys(); break;
+    case 'spec': toggleDev(true); break;
+  }
+}
+function actProps(){
+  const t = selTarget(); if (!t) return;
+  const gi = fm_get_info(t.segs);
+  if (gi.code!==OK) return fail('read',t.name,gi,true);
+  mark('info');
+  const n = gi.node, dir = n.t==='d';
+  openSheet(
+    '<h3 id="sh-t">File information</h3><p class="sub">'+esc(t.name)+'</p>' +
+    '<dl><dt>Type</dt><dd>'+(dir?'Folder':n.bin?'Binary file':'Text file')+'</dd>' +
+    '<dt>Size</dt><dd>'+(dir?plural(Object.keys(n.ch).length,'item'):fmtSize(sizeOf(n))+' ('+sizeOf(n)+' bytes)')+'</dd>' +
+    '<dt>Modified</dt><dd>'+fmtMod(n.m)+'</dd><dt>Location</dt><dd>'+esc(pathStr(cwd))+'</dd>' +
+    '<dt>Read-only</dt><dd>'+(n.ro?'Yes':'No')+'</dd></dl>' +
+    '<div class="actions"><button class="btn primary" data-x="cancel" id="p-ok">Close</button></div>');
+  $('#p-ok').focus();
+}
+function actKeys(){
+  const rows = [['N','New file'],['Enter','Open a file or folder'],['A','Append to the selected file'],['F2','Rename'],['Delete','Delete, after asking'],
+    ['Backspace','Up one folder'],['I','File information'],['F5','Refresh'],['Alt+F or F10','Open the File menu'],['Esc','Close a dialog or menu']];
+  openSheet('<h3 id="sh-t">Keyboard shortcuts</h3><p class="sub">Everything in the menus also has a key.</p>' +
+    '<dl style="grid-template-columns:128px 1fr">'+rows.map(r => '<dt><kbd>'+r[0]+'</kbd></dt><dd>'+r[1]+'</dd>').join('')+'</dl>' +
+    '<div class="actions"><button class="btn primary" data-x="cancel" id="k-ok">Close</button></div>');
+  $('#k-ok').focus();
+}
+function actExit(){
+  const sh = openSheet(
+    '<div class="warn-ico" style="background:var(--accent-soft);color:var(--accent)">'+icon('x',22)+'</div><h3 id="sh-t">Close Files?</h3>' +
+    '<p class="sub">Every change is already saved. Nothing is waiting to be written.</p>' +
+    '<div class="actions"><button class="btn" id="x-no" data-x="cancel">Stay</button><button class="btn primary" id="x-yes">Close app</button></div>');
+  $('#x-no',sh).focus();
+  $('#x-yes',sh).addEventListener('click',() => {
+    closeSheet(true);
+    const sc = document.createElement('div'); sc.className = 'scrim';
+    sc.innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t"><h3 id="sh-t">Files has closed</h3><p class="sub">In the real program this ends the process. The mockup stays open so you can try it again.</p><div class="actions"><button class="btn primary" id="reopen">Open Files again</button></div></div>';
+    $('#layer').appendChild(sc); sheetEl = sc;
+    $('#reopen').addEventListener('click',() => { closeSheet(true); init(); });
+    $('#reopen').focus();
+  });
+}
+document.addEventListener('mouseover', e => {
+  if (!menuEl) return;
+  const b = e.target.closest('[data-m]');
+  if (b && +b.dataset.m!==menuIdx) toggleMenu(+b.dataset.m,false);
+});
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const mb = t.closest('[data-m]'); if (mb){ toggleMenu(+mb.dataset.m,false); return; }
+  const mi = t.closest('[data-mi]'); if (mi){ const id = mi.dataset.mi; closeMenu(); runMenu(id); return; }
+  if (menuEl && !t.closest('.ctx')) closeMenu();
+  const go = t.closest('[data-go]'); if (go){ go.blur(); go.dataset.go && go_(go.dataset.go.split('|')); return; }
+  const cx = t.closest('[data-cx]'); if (cx){ const a = cx.dataset.cx; closeCtx(); ACTS[a](); return; }
+  if (ctxEl && !t.closest('.ctx')) closeCtx();
+  if (t.closest('[data-x="cancel"]')){ closeSheet(); return; }
+  const act = t.closest('[data-act]');
+  if (act){
+    const a = act.dataset.act;
+    if (ACTS[a]){ mark('menu'); ACTS[a](); renderDev(); }
+    else if (a==='up') goUp();
+    else if (a==='dev') toggleDev();
+    else if (a==='dev-close') toggleDev(false);
+    else if (a==='theme') toggleTheme();
+    else if (a==='sim') simDelete();
+    else if (a==='reset'){ init(); toast('info','Demo reset.'); }
+    return;
+  }
+  const row = t.closest('.row'); if (row){ select(row.dataset.name,true); }
+});
+function go_(segs){ go(segs); }
+document.addEventListener('dblclick', e => { const row = e.target.closest('.row'); if (row){ select(row.dataset.name,true); actOpen(); } });
+document.addEventListener('contextmenu', e => {
+  const row = e.target.closest('.row');
+  if (row){ e.preventDefault(); select(row.dataset.name,true); openCtx(e.clientX,e.clientY); }
+});
+document.addEventListener('keydown', e => {
+  const t = e.target, typing = t.closest && t.closest('input,textarea');
+  if (e.key==='F10' && !sheetEl){ e.preventDefault(); toggleMenu(0,true); return; }
+  if (e.altKey && !e.ctrlKey && !e.metaKey && !sheetEl){
+    const i = MENUS.findIndex(m => m.key===e.key.toLowerCase());
+    if (i>=0){ e.preventDefault(); toggleMenu(i,true); return; }
+  }
+  if (e.key==='Escape'){
+    if (sheetEl){ e.preventDefault(); closeSheet(); }
+    else if (menuEl){ e.preventDefault(); closeMenu(true); }
+    else if (ctxEl){ e.preventDefault(); closeCtx(); }
+    else if (devOpen){ toggleDev(false); }
+    return;
+  }
+  if (sheetEl){ if (e.key==='Tab') trapTab(e); return; }
+  if (menuEl){ menuKeys(e); return; }
+  if (ctxEl){
+    const items = [].slice.call(ctxEl.querySelectorAll('.ci')), i = items.indexOf(document.activeElement);
+    if (e.key==='ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+    else if (e.key==='ArrowUp'){ e.preventDefault(); items[(i+items.length-1)%items.length].focus(); }
+    return;
+  }
+  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (t.closest && t.closest('button') && (e.key==='Enter' || e.key===' ')) return;
+  switch (e.key){
+    case 'ArrowDown': e.preventDefault(); moveSel(1); break;
+    case 'ArrowUp': e.preventDefault(); moveSel(-1); break;
+    case 'Home': e.preventDefault(); if (shown.length) select(shown[0].name); break;
+    case 'End': e.preventDefault(); if (shown.length) select(lastOf(shown).name); break;
+    case 'Enter': e.preventDefault(); actOpen(); break;
+    case 'Backspace': e.preventDefault(); goUp(); break;
+    case 'F2': e.preventDefault(); actRename(); break;
+    case 'Delete': e.preventDefault(); actDelete(); break;
+    case 'n': case 'N': e.preventDefault(); actNew(); break;
+    case 'a': case 'A': e.preventDefault(); actAppend(); break;
+    case 'i': case 'I': e.preventDefault(); actProps(); break;
+    case 'F5': e.preventDefault(); refresh(); toast('ok','Refreshed.'); break;
+  }
+});
+
+buildMenubar();
+init();
+})();
+</script>
+</body>
+</html>

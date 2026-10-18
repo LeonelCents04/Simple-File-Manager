@@ -1,0 +1,35 @@
+{
+  "name": "simple-file-manager",
+  "productName": "Simple File Manager",
+  "version": "2.0.0",
+  "description": "Menu-driven Windows file manager with a glass UI: create, read, append, rename and delete text files safely. A class project.",
+  "type": "module",
+  "main": "src/main/main.js",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/start.js",
+    "test": "node --test \"tests/*.test.js\"",
+    "lint": "eslint --max-warnings 0 .",
+    "dist": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.simplefilemanager.app",
+    "files": ["src/**/*", "package.json"],
+    "directories": { "output": "dist" },
+    "win": { "target": "nsis", "icon": "icon/app.ico" },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Simple-File-Manager-Setup-${version}.exe"
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/manrope": "5.3.0",
+    "electron": "44.9.0",
+    "electron-builder": "26.17.0",
+    "eslint": "10.13.0",
+    "globals": "17.13.0"
+  }
+}

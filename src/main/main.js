@@ -10,7 +10,8 @@ let win = null;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1290, height: 850, minWidth: 900, minHeight: 580, useContentSize: true,
+    // Small minimum so every Snap Layout zone fits: a quarter at 150% scaling is 640x360, a third of 1280 is 427.
+    width: 1290, height: 850, minWidth: 400, minHeight: 340, useContentSize: true,
     title: 'Files',
     icon: path.join(here, '..', 'renderer', 'icon.png'),   // built by scripts/make-icon.ps1
     show: false,

@@ -69,6 +69,7 @@ export function toggleMenu(i, focusFirst, hasSelection, recents, drives) {
   const r = btn.getBoundingClientRect();
   m.style.left = Math.max(8, Math.min(r.left, innerWidth - m.offsetWidth - 8)) + 'px';
   m.style.top = (r.bottom + 6) + 'px';
+  m.style.maxHeight = (innerHeight - r.bottom - 14) + 'px';   // scrolls instead of running off a short window
   menuEl = m;
   if (focusFirst) {
     const f = m.querySelector('.ci:not(:disabled)');

@@ -50,6 +50,14 @@ function mark(k) {
   if (SHOW_SPEC_PANEL) renderDev(cov, logs);
 }
 
+/** Unticks the whole checklist so it can be walked through again; the log is kept. */
+function resetSpec() {
+  cov.clear();
+  if (document.activeElement === $('#devreset')) $('#devx').focus();   // the button is about to be disabled
+  renderDev(cov, logs);
+  toast('info', INFO.specReset);
+}
+
 /** window.fm call that is also written to the log panel (raw codes stay there). */
 async function call(name, ...args) {
   const r = await fm[name](...args);
@@ -427,12 +435,16 @@ document.addEventListener('click', (e) => {
     else if (a === 'refresh') actRefresh();
     else if (a === 'dev') toggleDev();
     else if (a === 'dev-close') toggleDev(false);
+    else if (a === 'dev-reset') resetSpec();
     else if (a === 'theme') toggleTheme();
     return;
   }
   const row = t.closest('.row');
   if (row) select(row.dataset.name, true);
 });
+
+// A menu placed for the old size would hang in the wrong spot after a resize or snap.
+window.addEventListener('resize', () => { closeMenu(); closeCtx(); });
 
 document.addEventListener('dblclick', (e) => {
   const row = e.target.closest('.row');
@@ -468,7 +480,7 @@ document.addEventListener('keydown', (e) => {
   if (ctxOpen()) { ctxKeys(e); return; }
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
   if (t.closest && t.closest('button') && (e.key === 'Enter' || e.key === ' ')) return;
-  const page = Math.max(1, Math.floor($('#rows').clientHeight / 46) - 1);
+  const page = Math.max(1, Math.floor($('#rows').clientHeight / ($('.row')?.offsetHeight || 46)) - 1);
   switch (e.key) {
     case 'ArrowDown': e.preventDefault(); moveSel(1); break;
     case 'ArrowUp': e.preventDefault(); moveSel(-1); break;

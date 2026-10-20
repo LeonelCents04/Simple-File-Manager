@@ -64,4 +64,5 @@ export const INFO = {
   safe: 'Nothing is overwritten without asking',
   driveSpace: (free, total) => free + ' free of ' + total,
   driveFree: (free) => free + ' free',
+  specReset: 'Spec checklist reset.',
 };

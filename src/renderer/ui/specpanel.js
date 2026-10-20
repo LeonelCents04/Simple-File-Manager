@@ -33,6 +33,7 @@ export function toggleDev(open) {
 export function renderDev(cov, logs) {
   $('#cov').innerHTML = COV.map((c) => '<li class="' + (cov.has(c[0]) ? 'done' : '') + '"><span class="tick">' + icon('check', 11) + '</span><span>' + c[1] + '<small>' + c[2] + '</small></span></li>').join('');
   $('#devcnt').textContent = cov.size + '/' + COV.length;
+  $('#devreset').disabled = cov.size === 0;
   $('#meterfill').style.width = (cov.size / COV.length * 100) + '%';
   $('#log').innerHTML = logs.length ? logs.slice(0, 40).map((l) => '<li class="' + (l.ok ? '' : 'err') + '">' + esc(l.t) + '</li>').join('')
     : '<li class="none">Nothing yet. Press N to create a file.</li>';

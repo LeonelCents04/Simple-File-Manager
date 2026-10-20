@@ -34,6 +34,7 @@ The project focuses on safe file handling. Every operation checks that the file 
 - **Clear error messages** that say what failed and why, for example *read-only*, *already exists* or *disk full*
 - **Drive picker:** every ready drive on your computer, with its free space
 - **File viewer** with line numbers, plus a quick preview of the selected file
+- **Works with Windows Snap Layouts:** the layout adapts to half, third, quarter and full-screen windows, down to 400×340
 - **Light and dark themes** that follow Windows, with a toggle
 - **Accessible:** usable by keyboard alone, and respects Windows' reduce-motion and transparency settings
 

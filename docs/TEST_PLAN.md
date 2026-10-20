@@ -99,3 +99,54 @@ This machine has two ready drives, **C:** (474.7 GB) and **D:** (476.3 GB).
 | The 12.2 script against the installed app | **28/28 PASS**; the exe and the sidebar show the app icon |
 
 **Not checked:** code signing, the installer wizard clicked through by hand (only the silent install was run), uninstalling, a physically full disk, and USB hot-plug.
+
+## Responsive layout and Snap Layouts (2026-10-20)
+
+**Layout check.** A script emulated each window size and checked that:
+
+- the page never scrolls, and the app stays inside the window
+- no button sits under the window buttons
+- no controls overlap or stick out of their row, and no fixed label (toolbar, menu, size, date, status bar, chip, breadcrumb) is cut off
+- the toolbar and the location row stay on one line
+- at least 2 file rows are visible
+- the Go menu and the New file and viewer dialogs fit inside the window
+
+The test folder was 8 levels deep, with long names and 18 entries.
+
+| Before | After |
+|---|---|
+| **0/16 sizes clean.** Every size below 900 px scrolled the whole page; the location row wrapped onto 2–4 lines at every size; the Go menu ran off the bottom of short windows; dialogs slid under the window buttons. | **21/21 clean**: the 16 sizes below plus the 5 real snapped sizes |
+
+Sizes checked (CSS pixels):
+
+- **125% scaling:** full 1536×864, two-thirds 1024×864, half 768×864, third 512×864, quarter 768×432, top half 1536×432
+- **100% scaling at 1080p:** full 1920×1080, half 960×1080, quarter 960×540
+- **1366×768 screen:** half 683×768, quarter 683×384
+- **150% scaling:** quarter 640×360, third 427×720
+- **Large screens:** 1440p 2560×1440, ultrawide 3440×1440
+- **Minimum:** 400×340
+- **Real snapped sizes on this screen:** 754×858, 754×426, 498×858, 1010×858, 1536×863
+
+**Real window** (this PC: 1920×1080 at 125%). The test window was resized with `SetWindowPos` to each snap zone in physical pixels:
+
+| Check | Result |
+|---|---|
+| Half (960×1080), quarter (960×540), third (640×1080), two-thirds (1280×1080) | **PASS**: the window took exactly that size and the page never scrolls |
+| Minimum size | **PASS**: asking for 300×250 gives 400×340 |
+| Maximized | **PASS**: 1536×863 |
+| Snap Layouts flyout (`WM_NCHITTEST` on the caption buttons) | **PASS**: maximize returns `HTMAXBUTTON` (9), close `HTCLOSE` (20) and minimize `HTMINBUTTON` (8) |
+| Window styles | Resizable (`WS_THICKFRAME`) and has a maximize box |
+| Regression: the 12.2 script, drive checks, unit tests, lint | **28/28**, **5/5**, **24/24**, **0 warnings** |
+
+**Not checked:** dragging a window into a snap zone by hand (the zones were reproduced with `SetWindowPos` instead), other monitors, and changing the DPI while the app is open.
+
+## Spec checklist Reset (2026-10-20)
+
+**11/11 PASS** in the running app:
+
+- **Reset** is disabled while nothing is ticked.
+- Using the app ticks items (3/10). Reset, pressed from the keyboard, brings it back to 0/10, disables the button again and moves focus to the panel's close button.
+- The log is kept, "Spec checklist reset." appears, and the panel stays open.
+- Items tick again after a reset.
+- The panel header fits at 1536 px and at 400 px.
+- Regression: the 12.2 script **28/28**, unit tests **24/24**, lint **0 warnings**.
